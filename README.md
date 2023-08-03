@@ -1,8 +1,8 @@
 # Gerenciador de frequência acadêmica
 Componentes:
-* Karlos Wiliam da Rocha Marques
+* Antônio Cauê Oliveira Morais
 * Davi da Silva Soares
-* Cauê
+* Karlos Wiliam da Rocha Marques
 
 ## Descrição
 
