@@ -7,14 +7,12 @@
   <version>1.0-SNAPSHOT</version>
   <name>attendance-manager</name>
   <url>http://maven.apache.org</url>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+  <repositories>
+    <repository>
+      <id>clojars</id>
+      <url>https://clojars.org/repo/</url>
+    </repository>
+  </repositories>
   <build>
     <plugins>
       <plugin>
@@ -26,7 +24,80 @@
           <target>1.8</target>
         </configuration>
       </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.3.0</version> <!-- Use a versão mais recente, se disponível -->
+          <configuration>
+            <archive>
+              <manifest>
+                <addClasspath>true</addClasspath>
+                <classpathPrefix>dependency/</classpathPrefix>
+                <mainClass>org.academic.App</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>copy-dependencies</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>copy-dependencies</goal>
+                    </goals>
+                    <configuration>
+                        <useBaseVersion>false</useBaseVersion>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.0.0</version> <!-- Use a versão mais recente disponível -->
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>java</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <mainClass>org.academic.App</mainClass> <!-- Substitua pelo nome da sua classe principal -->
+            </configuration>
+        </plugin>
     </plugins>
   </build>
+  <dependencies>
+
+    <dependency>
+      <groupId>com.googlecode.lanterna</groupId>
+      <artifactId>lanterna</artifactId>
+      <version>3.2.0-alpha1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jline</groupId>
+      <artifactId>jline</artifactId>
+      <version>3.23.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.33</version>
+    </dependency>
+
+  </dependencies>
 </project>
 

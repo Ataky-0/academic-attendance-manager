@@ -10,6 +10,7 @@ public class App
 
     functionsMap.put("--help",Help::print);
     functionsMap.put("--version",Help::printVersion);
+    functionsMap.put("menu",Menu::init);
 
     if (args.length > 0 && functionsMap.containsKey(args[0])){
       Runnable funcRunnable = functionsMap.get(args[0]);
@@ -19,4 +20,3 @@ public class App
     }
   }
 }
-

@@ -1,5 +1,6 @@
 *.class
-/target/
+attendance-manager/target/*
 .project
 .classpath
 .zhistory
+.vscode/

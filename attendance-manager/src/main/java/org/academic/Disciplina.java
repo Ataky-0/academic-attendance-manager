@@ -5,22 +5,19 @@ public class Disciplina {
     private String codigo;
     private int cargaHoraria;
     private String nomeDoProfessor;
-    private Status status;
-    private RelatorioDisciplina relatorioDisciplina;
-    private RelatorioRisco relatorioRisco;
+    private Boolean status;
+    private RelatorioGeral relatorioGeral;
     private Frequencia frequencia;
 
     // Construtor
     public Disciplina(String nome, String codigo, int cargaHoraria, String nomeDoProfessor,
-                      Status status, RelatorioDisciplina relatorioDisciplina,
-                      RelatorioRisco relatorioRisco, Frequencia frequencia) {
+                      Boolean status, RelatorioGeral RelatorioGeral, Frequencia frequencia) {
         this.nome = nome;
         this.codigo = codigo;
         this.cargaHoraria = cargaHoraria;
         this.nomeDoProfessor = nomeDoProfessor;
         this.status = status;
-        this.relatorioDisciplina = relatorioDisciplina;
-        this.relatorioRisco = relatorioRisco;
+        this.relatorioGeral = RelatorioGeral;
         this.frequencia = frequencia;
     }
 
@@ -57,28 +54,20 @@ public class Disciplina {
         this.nomeDoProfessor = nomeDoProfessor;
     }
 
-    public Status getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 
-    public RelatorioDisciplina getRelatorioDisciplina() {
-        return relatorioDisciplina;
+    public RelatorioGeral getRelatorioGeral() {
+        return relatorioGeral;
     }
 
-    public void setRelatorioDisciplina(RelatorioDisciplina relatorioDisciplina) {
-        this.relatorioDisciplina = relatorioDisciplina;
-    }
-
-    public RelatorioRisco getRelatorioRisco() {
-        return relatorioRisco;
-    }
-
-    public void setRelatorioRisco(RelatorioRisco relatorioRisco) {
-        this.relatorioRisco = relatorioRisco;
+    public void setRelatorioGeral(RelatorioGeral relatorioGeral) {
+        this.relatorioGeral = relatorioGeral;
     }
 
     public Frequencia getFrequencia() {

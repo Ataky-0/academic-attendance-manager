@@ -47,8 +47,6 @@ public class Aluno {
         this.matricula = matricula;
     }
 
-
-    // Método para exibir informações do aluno
     public void exibirInformacoes() {
         System.out.println("Nome: " + nome);
         System.out.println("Curso: " + curso);
