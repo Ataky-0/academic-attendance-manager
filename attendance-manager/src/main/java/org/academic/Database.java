@@ -8,8 +8,8 @@ import java.sql.SQLException;
 
 public class Database {
     private static final String URL = "jdbc:mysql://localhost:3306/academic_attendance_2";
-    private static final String USUARIO = "root"; // Deixar padrão
-    private static final String SENHA = "opera";
+    private static final String USUARIO = "usuario_root";
+    private static final String SENHA = "senha_root";
 
     public static Connection conectar() {
         Connection conexao = null;
