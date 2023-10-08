@@ -11,7 +11,7 @@ public class Menu {
 
     static Scanner scanner = new Scanner(System.in);
 
-    public static void init() {
+    public static void init() { // Inicia menu principal
         while (true) {
             String[] opcoesMenu = {
                     "Disciplinas | Gerenciar Disciplinas",
@@ -38,7 +38,7 @@ public class Menu {
         }
     }
 
-    private static void drawMenu(String title, String[] opcoesMenu) {
+    private static void drawMenu(String title, String[] opcoesMenu) { // Desenha estrutura menu
         if (title != null) {
             System.out.printf("<-\t | %s | \t->\n", title);
         }
@@ -49,7 +49,7 @@ public class Menu {
         }
     }
 
-    private static int getUserChoice(Scanner scanner, int numOpcoes) {
+    private static int getUserChoice(Scanner scanner, int numOpcoes) { // Obtém escolha do usuário com guard clauses
         int escolha = scanner.nextInt();
         scanner.nextLine();
         System.out.printf("<-\t##\t->\n");
@@ -61,18 +61,18 @@ public class Menu {
         }
     }
 
-    static void DisplayRelatorioGeral() {
+    static void DisplayRelatorioGeral() { // Apenas para organizar, só chama um método do  RelatorioGeral
         RelatorioGeral.printDisciplinasFrequencias();
     }
 
-    static void DisciplinaChooser() {
+    static void DisciplinaChooser() { // Responsável pela escolha de disciplinas
         System.out.printf("<-\t | Disciplinas | \t->\n");
         Boolean existeDisciplina = Disciplina.existeDisciplinas();
         if (existeDisciplina) {
             Disciplina.printParcialDisciplinas();
             System.out.println("(0 para cancelar, 1 para criar, 2 para deletar)");
-            System.out.println("Escolha uma disciplina através do seu código: ");
-            String escolha = scanner.nextLine(); // Adicionar classguard para limitar as opções.
+            System.out.println("Ou escolha uma disciplina através do seu código: ");
+            String escolha = scanner.nextLine(); // Seria interessante adicionar .guard clauses
             if (escolha.equals("0")) {
                 return;
             } else if (escolha.equals("1")) {
@@ -102,7 +102,7 @@ public class Menu {
         }
     }
 
-    static void frequenciaManagement(String codigoDisciplina) { // Frequência
+    static void frequenciaManagement(String codigoDisciplina) { // Menu para frequencia
         drawMenu("Frequências", null);
         Frequencia.printParcialFrequencias(codigoDisciplina);
         System.out.println("(0 para cancelar, 1 para registrar, 2 para deletar, 3 para autoavaliação)");
@@ -122,7 +122,7 @@ public class Menu {
         }
     }
 
-    static void registerFrequencia(String codigoDiscplina){
+    static void registerFrequencia(String codigoDiscplina){ // Registrar uma frequencia em uma disciplina
         System.out.println("Digite uma data (yyyy/MM/dd): ");
         Date data = getDate();
         // Verificar se não existe frequência com essa data
@@ -138,21 +138,36 @@ public class Menu {
         }
     }
 
-    static void deleteFrequencia(String codigoDisciplina) {
+    static void deleteFrequencia(String codigoDisciplina) { // Deletar uma frequencia de uma disciplina
         System.out.println("Digite a data da frequência (yyyy/MM/dd): ");
         Date data = getDate();
         Frequencia.Delete(codigoDisciplina,data);
     }
 
-    static void avaliarFrequencia(String codigoDisciplina){
+    static void avaliarFrequencia(String codigoDisciplina){ // Linkar Autoavaliacao à frequencia
         System.out.println("Digite a data da frequência (yyyy/MM/dd): ");
         Date data = getDate();
-        System.out.println("Dite uma nota para este dia de aula (1 a 5): ");
-        int autoNota = Menu.getUserChoice(scanner,5);
+        int frequencia_id = Frequencia.getId(codigoDisciplina, data);
+        if (Autoavaliacao.existByFrequencia(frequencia_id)){
+            System.out.println(Autoavaliacao.getComentario(frequencia_id));
+            System.out.printf("->\tDeseja refazer este comentário? (1 para Não, 2 para Sim)\n");
+            int escolha = getUserChoice(scanner, 2);
+            if (escolha == 1)
+                return;
+            else {
+                System.out.println("Refaça o comentário deste dia: ");
+                String comentario = scanner.nextLine();
+                Autoavaliacao.Update(frequencia_id, comentario);
+                return;
+            }
+        }
+        System.out.println("Digite um comentário para este dia: ");
+        String comentario = scanner.nextLine();
+        Autoavaliacao.Create(frequencia_id,comentario);
         
     }
 
-    static void createDisciplina() {
+    static void createDisciplina() { // Cria uma disciplina
         System.out.println("Digite o nome da disciplina: ");
         String nome = scanner.nextLine();
         System.out.println("Digite o código da disciplina: ");
@@ -163,13 +178,13 @@ public class Menu {
         Disciplina.Create(nome, codigo, cargaHoraria);
     }
 
-    static void deleteDisciplina() {
+    static void deleteDisciplina() { // Deleta uma disciplina
         System.out.println("Digite o código da disciplina: ");
         String codigo = scanner.nextLine();
         Disciplina.Delete(codigo);
     }
 
-    private static Date getDate(){
+    private static Date getDate(){ // Obtém uma data com guard clauses
         Date data;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         scanner.nextLine();
@@ -189,8 +204,8 @@ public class Menu {
         return data;
     }
 
-    private static boolean isDateValid(String dateStr, SimpleDateFormat dateFormat) {
-        dateFormat.setLenient(false); // Desativa a tolerância a datas inválidas
+    private static boolean isDateValid(String dateStr, SimpleDateFormat dateFormat) { // Subordinada do GetDate, serve exclusivamente para verificar se confere o formato
+        dateFormat.setLenient(false); // Não tolera erros
         try {
             dateFormat.parse(dateStr);
             return true;

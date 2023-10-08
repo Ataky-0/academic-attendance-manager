@@ -7,18 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Frequencia {
-    private Date data;
-    private Boolean presencaAusencia;
-    private Autoavaliacao autoavaliacao;
-
-    // Construtor
-    public Frequencia(Date data, Boolean presencaAusencia, Autoavaliacao autoavaliacao) {
-        this.data = data;
-        this.presencaAusencia = presencaAusencia;
-        this.autoavaliacao = autoavaliacao;
-    }
-
-    public static void printParcialFrequencias(String codigoDisciplina) {
+    public static void printParcialFrequencias(String codigoDisciplina) { // imprime quase todas informações de todas tuplas frequencia
         try (Connection Conexao = Database.conectar()) {
             ResultSet result = Database.consultarResulta(String.format(
                     "SELECT data,presencaAusencia,faltas FROM Frequencia WHERE codigo = '%s'", codigoDisciplina));
@@ -42,14 +31,14 @@ public class Frequencia {
         }
     }
 
-    public static void Create(Date data, int presencaAusencia, String codigo, int faltas) {
+    public static void Create(Date data, int presencaAusencia, String codigo, int faltas) { // cria tupla frequencia
         String sql = String.format(
                 "INSERT INTO Frequencia (data,presencaAusencia,codigo,faltas) VALUES ('%tF','%d','%s','%d')", data,
                 presencaAusencia, codigo, faltas);
         Database.updateDB(sql);
     }
 
-    public static void Delete(String codigo, Date data) {
+    public static void Delete(String codigo, Date data) { // deleta uma tupla frequencia
         String sqlFrequencia;
         if (data != null) {
             Autoavaliacao.Delete(Frequencia.getId(codigo, data));
@@ -57,11 +46,10 @@ public class Frequencia {
                     codigo);
             Database.updateDB(sqlFrequencia);
         } else {
-            // Autoavaliacao.Delete(Frequencia.getId(codigo, null));
-            // sqlFrequencia = String.format("DELETE FROM Frequencia WHERE codigo = '%s'", codigo);
             try (Connection Conexao = Database.conectar()) {
-                ResultSet result = Database.consultarResulta(String.format("SELECT data,frequencia_id FROM Frequencia WHERE codigo = '%s'",codigo));
-                while (result.next()){
+                ResultSet result = Database.consultarResulta(
+                        String.format("SELECT data,frequencia_id FROM Frequencia WHERE codigo = '%s'", codigo));
+                while (result.next()) {
                     Autoavaliacao.Delete(result.getInt("frequencia_id"));
                     Frequencia.Delete(codigo, result.getDate("data"));
                 }
@@ -71,25 +59,7 @@ public class Frequencia {
         }
     }
 
-    public static void Alternar(String codigo, Date data) { // Quebrado, tem que corrigir
-        try (Connection Conexao = Database.conectar()) {
-            ResultSet result = Database.consultarResulta(String.format(
-                    "SELECT presencaAusencia FROM Frequencia WHERE data = '%tF' and codigo = '%s'", data, codigo));
-            if (result.next()) {
-                Boolean presencaAusencia = result.getBoolean("presencaAusencia");
-                int novoPresencaAusencia = (presencaAusencia == true ? 0 : 1);
-                String sqlFrequencia = String.format(
-                        "UPDATE Frequencia SET presencaAusencia = '%d' WHERE codigo = '%s'", novoPresencaAusencia,
-                        codigo);
-                Database.updateDB(sqlFrequencia);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static int getFaltas(String codigo) {
+    public static int getFaltas(String codigo) { // obtém todas as faltas de uma disciplina
         try (Connection Conexao = Database.conectar()) {
             ResultSet result = Database
                     .consultarResulta(String.format("SELECT faltas FROM Frequencia WHERE codigo = '%s'", codigo));
@@ -104,10 +74,11 @@ public class Frequencia {
         return 1;
     }
 
-    public static int getId(String codigo, Date data) {
+    public static int getId(String codigo, Date data) { // obtém frequencia_id de uma tupla frequencia
         int id = 0;
         try (Connection Conexao = Database.conectar()) {
-            ResultSet result = Database.consultarResulta("SELECT codigo,frequencia_id FROM Frequencia");
+            ResultSet result = Database.consultarResulta(
+                    String.format("SELECT codigo,frequencia_id FROM Frequencia WHERE data = '%tF'", data));
             result.next();
             id = result.getInt("frequencia_id");
         } catch (SQLException e) {
@@ -116,40 +87,16 @@ public class Frequencia {
         return id;
     }
 
-    public static Boolean doesExist(int frequenca_id) {
+    public static Boolean doesExist(int frequencia_id) { // retorna caso tupla frequencia exista ou não
         Boolean doesExist = false;
         try (Connection Conexao = Database.conectar()) {
-            ResultSet result = Database.consultarResulta("SELECT frequencia_id FROM Frequencia");
+            ResultSet result = Database.consultarResulta(
+                    String.format("SELECT * FROM Frequencia WHERE frequencia_id = '%s'", frequencia_id));
             if (result.next())
                 doesExist = true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return doesExist;
-    }
-
-    // Getters e Setters para os atributos data, presencaAusencia e autoavaliacao
-    public Date getData() {
-        return data;
-    }
-
-    public void setData(Date data) {
-        this.data = data;
-    }
-
-    public Boolean getPresencaAusencia() {
-        return presencaAusencia;
-    }
-
-    public void setPresencaAusencia(Boolean presencaAusencia) {
-        this.presencaAusencia = presencaAusencia;
-    }
-
-    public Autoavaliacao getAutoavaliacao() {
-        return autoavaliacao;
-    }
-
-    public void setAutoavaliacao(Autoavaliacao autoavaliacao) {
-        this.autoavaliacao = autoavaliacao;
     }
 }

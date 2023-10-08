@@ -6,27 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Disciplina {
-    private String nome;
-    private String codigo;
-    private int cargaHoraria;
-    private String nomeDoProfessor;
-    private Boolean status;
-    private RelatorioGeral relatorioGeral;
-    private Frequencia frequencia;
-
-    // Construtor
-    public Disciplina(String nome, String codigo, int cargaHoraria, String nomeDoProfessor,
-            Boolean status, RelatorioGeral RelatorioGeral, Frequencia frequencia) {
-        this.nome = nome;
-        this.codigo = codigo;
-        this.cargaHoraria = cargaHoraria;
-        this.nomeDoProfessor = nomeDoProfessor;
-        this.status = status;
-        this.relatorioGeral = RelatorioGeral;
-        this.frequencia = frequencia;
-    }
-
-    public static Boolean existeDisciplinas() {
+    public static Boolean existeDisciplinas() { // retorna caso exista ou não quais disciplinas no banco
         Boolean existe = false;
 
         try (Connection Conexao = Database.conectar()) {
@@ -43,7 +23,7 @@ public class Disciplina {
         return existe;
     }
 
-    public static void printParcialDisciplinas() {
+    public static void printParcialDisciplinas() { // imprime quase todas informações de todas as disciplinas
         try (Connection Conexao = Database.conectar()) {
             ResultSet result = Database.consultarResulta("SELECT codigo,nome FROM Disciplina");
             while (result.next()) {
@@ -57,10 +37,10 @@ public class Disciplina {
         }
     }
 
-    public static ResultSet getDisciplinaByCode(String code) {
+    public static ResultSet getDisciplinaByCode(String codigo) { // obtém tupla Disciplina através de codigo
         try (Connection Conexao = Database.conectar()) {
             PreparedStatement consult = Database.consultarPuro("SELECT * FROM Disciplina WHERE codigo = ?");
-            consult.setString(1, code);
+            consult.setString(1, codigo);
             ResultSet result = consult.executeQuery();
             return result;
         } catch (SQLException e) {
@@ -69,13 +49,13 @@ public class Disciplina {
         return null;
     }
 
-    public static void Create(String nome, String codigo, int cargaHoraria) {
+    public static void Create(String nome, String codigo, int cargaHoraria) { // cria uma tupla Disciplina 
         String sql = String.format("INSERT INTO Disciplina (nome,codigo,cargaHoraria) VALUES ('%s','%s','%d')", nome,
                 codigo, cargaHoraria);
         Database.updateDB(sql);
     }
 
-    public static void Delete(String codigo) {
+    public static void Delete(String codigo) { // deleta uma tupla Disciplina
         Frequencia.Delete(codigo, null);
 
         String sqlRelatorioGeral = String.format("DELETE FROM RelatorioGeral WHERE codigo = '%s'", codigo);
@@ -85,10 +65,11 @@ public class Disciplina {
         Database.updateDB(sqlDisciplina);
     }
 
-    public static int getCargaHoraria(String codigo) {
+    public static int getCargaHoraria(String codigo) { // obtém cargaHoraria de uma tupla
         int cargaHoraria = 0;
         try (Connection Conexao = Database.conectar()) {
-            ResultSet result = Database.consultarResulta(String.format("SELECT cargaHoraria FROM Disciplina WHERE codigo = '%s'",codigo));
+            ResultSet result = Database
+                    .consultarResulta(String.format("SELECT cargaHoraria FROM Disciplina WHERE codigo = '%s'", codigo));
             result.next();
             try {
                 cargaHoraria = result.getInt("cargaHoraria");
@@ -98,58 +79,5 @@ public class Disciplina {
         } catch (SQLException e) {
         }
         return cargaHoraria;
-    }
-
-    // Métodos getters e setters
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
-    public void setCargaHoraria(int cargaHoraria) {
-        this.cargaHoraria = cargaHoraria;
-    }
-
-    public String getNomeDoProfessor() {
-        return nomeDoProfessor;
-    }
-
-    public void setNomeDoProfessor(String nomeDoProfessor) {
-        this.nomeDoProfessor = nomeDoProfessor;
-    }
-
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
-
-    public RelatorioGeral getRelatorioGeral() {
-        return relatorioGeral;
-    }
-
-    public void setRelatorioGeral(RelatorioGeral relatorioGeral) {
-        this.relatorioGeral = relatorioGeral;
-    }
-
-    public Frequencia getFrequencia() {
-        return frequencia;
-    }
-
-    public void setFrequencia(Frequencia frequencia) {
-        this.frequencia = frequencia;
     }
 }

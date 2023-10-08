@@ -8,10 +8,10 @@ import java.sql.SQLException;
 
 public class Database {
     private static final String URL = "jdbc:mysql://localhost:3306/academic_attendance_2";
-    private static final String USUARIO = "usuario_root";
-    private static final String SENHA = "senha_root";
+    private static final String USUARIO = "root";
+    private static final String SENHA = "opera";
 
-    public static Connection conectar() {
+    public static Connection conectar() { // conecta no banco de dados
         Connection conexao = null;
 
         try {
@@ -25,7 +25,7 @@ public class Database {
         return conexao;
     }
 
-    public static ResultSet consultarResulta(String SQL) {
+    public static ResultSet consultarResulta(String SQL) { // um atalho para realizar uma consulta e retornar seu ResultSet
         Connection conexao = Database.conectar();
         PreparedStatement consult;
         try {
@@ -38,7 +38,7 @@ public class Database {
         }
         return null;
     }
-    public static PreparedStatement consultarPuro(String SQL) {
+    public static PreparedStatement consultarPuro(String SQL) { // um atalho para realizar uma consulta e retornar um PreparedStatement
         Connection conexao = Database.conectar();
         PreparedStatement consult;
         try {
@@ -50,7 +50,7 @@ public class Database {
         }
         return null;
     }
-    public static int updateDB(String SQL){
+    public static int updateDB(String SQL){ // realiza sql do tipo create/update/delete
         Connection conexao = Database.conectar();
         PreparedStatement statement;
         try {
