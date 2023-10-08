@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS Frequencia (
     data DATE,
     presencaAusencia BOOLEAN,
     codigo VARCHAR(255),
-    int faltas;
+    int faltas,
     FOREIGN KEY (codigo) REFERENCES Disciplina (codigo)
 );
 
