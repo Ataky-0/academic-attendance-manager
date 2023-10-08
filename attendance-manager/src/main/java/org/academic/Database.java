@@ -1,15 +1,15 @@
 package org.academic;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Database {
-    private static final String URL = "jdbc:mysql://localhost:3306/academic_attendance_2";
-    private static final String USUARIO = "root";
-    private static final String SENHA = "opera";
+    private static final String URL = "jdbc:mysql://sql10.freemysqlhosting.net:3306/sql10651874";
+    private static final String USUARIO = "sql10651874";
+    private static final String SENHA = "PLMAzVMLbS";
 
     public static Connection conectar() { // conecta no banco de dados
         Connection conexao = null;

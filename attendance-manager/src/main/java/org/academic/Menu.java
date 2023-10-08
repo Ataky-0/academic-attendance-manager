@@ -45,14 +45,14 @@ public class Menu {
         if (opcoesMenu != null) {
             for (int i = 0; i < opcoesMenu.length; i++)
                 System.out.println((i + 1) + ". " + opcoesMenu[i]);
-            System.out.print("Escolha uma opção: ");
+            System.out.printf("Escolha uma opção:\n");
         }
     }
 
     private static int getUserChoice(Scanner scanner, int numOpcoes) { // Obtém escolha do usuário com guard clauses
+        System.out.print("-> ");
         int escolha = scanner.nextInt();
         scanner.nextLine();
-        System.out.printf("<-\t##\t->\n");
 
         if (escolha >= 1 && escolha <= numOpcoes) {
             return escolha;
@@ -71,7 +71,7 @@ public class Menu {
         if (existeDisciplina) {
             Disciplina.printParcialDisciplinas();
             System.out.println("(0 para cancelar, 1 para criar, 2 para deletar)");
-            System.out.println("Ou escolha uma disciplina através do seu código: ");
+            System.out.printf("Ou escolha uma disciplina através do seu código:\n-> ");
             String escolha = scanner.nextLine(); // Seria interessante adicionar .guard clauses
             if (escolha.equals("0")) {
                 return;
@@ -105,7 +105,7 @@ public class Menu {
     static void frequenciaManagement(String codigoDisciplina) { // Menu para frequencia
         drawMenu("Frequências", null);
         Frequencia.printParcialFrequencias(codigoDisciplina);
-        System.out.println("(0 para cancelar, 1 para registrar, 2 para deletar, 3 para autoavaliação)");
+        System.out.printf("(0 para cancelar, 1 para registrar, 2 para deletar, 3 para autoavaliação)\n-> ");
         int escolha = scanner.nextInt();
         switch (escolha) {
             case 3:
@@ -123,7 +123,7 @@ public class Menu {
     }
 
     static void registerFrequencia(String codigoDiscplina){ // Registrar uma frequencia em uma disciplina
-        System.out.println("Digite uma data (yyyy/MM/dd): ");
+        System.out.println("Digite uma data (yyyy/MM/dd):");
         Date data = getDate();
         // Verificar se não existe frequência com essa data
         System.out.println("Você estava presente? (1 para Não, 2 para Sim)");
@@ -132,54 +132,54 @@ public class Menu {
         if (presencaAusencia == 0){
             Frequencia.Create(data, presencaAusencia, codigoDiscplina, 2);
         } else {
-            System.out.println("Quantas aulas assistiu? (1 ou 2)");
+            System.out.printf("Quantas aulas assistiu? (1 ou 2)");
             int faltas = 2-getUserChoice(scanner, 2);
             Frequencia.Create(data, presencaAusencia, codigoDiscplina, faltas);
         }
     }
 
     static void deleteFrequencia(String codigoDisciplina) { // Deletar uma frequencia de uma disciplina
-        System.out.println("Digite a data da frequência (yyyy/MM/dd): ");
+        System.out.println("Digite a data da frequência (yyyy/MM/dd):");
         Date data = getDate();
         Frequencia.Delete(codigoDisciplina,data);
     }
 
     static void avaliarFrequencia(String codigoDisciplina){ // Linkar Autoavaliacao à frequencia
-        System.out.println("Digite a data da frequência (yyyy/MM/dd): ");
+        System.out.println("Digite a data da frequência (yyyy/MM/dd):");
         Date data = getDate();
         int frequencia_id = Frequencia.getId(codigoDisciplina, data);
         if (Autoavaliacao.existByFrequencia(frequencia_id)){
-            System.out.println(Autoavaliacao.getComentario(frequencia_id));
-            System.out.printf("->\tDeseja refazer este comentário? (1 para Não, 2 para Sim)\n");
+            System.out.println("\""+Autoavaliacao.getComentario(frequencia_id)+"\"");
+            System.out.println("Deseja refazer este comentário? (1 para Não, 2 para Sim)");
             int escolha = getUserChoice(scanner, 2);
             if (escolha == 1)
                 return;
             else {
-                System.out.println("Refaça o comentário deste dia: ");
+                System.out.printf("Refaça o comentário deste dia:\n-> ");
                 String comentario = scanner.nextLine();
                 Autoavaliacao.Update(frequencia_id, comentario);
                 return;
             }
         }
-        System.out.println("Digite um comentário para este dia: ");
+        System.out.printf("Digite um comentário para este dia:\n-> ");
         String comentario = scanner.nextLine();
         Autoavaliacao.Create(frequencia_id,comentario);
         
     }
 
     static void createDisciplina() { // Cria uma disciplina
-        System.out.println("Digite o nome da disciplina: ");
+        System.out.printf("Digite o nome da disciplina:\n-> ");
         String nome = scanner.nextLine();
-        System.out.println("Digite o código da disciplina: ");
+        System.out.printf("Digite o código da disciplina:\n-> ");
         String codigo = scanner.nextLine();
         System.out.println("Verifique a carga horária de cada disciplina no seu sistema acadêmico.");
-        System.out.println("Digite a carga horária da disciplina (horas): ");
+        System.out.printf("Digite a carga horária da disciplina (horas):\n-> ");
         int cargaHoraria = scanner.nextInt();
         Disciplina.Create(nome, codigo, cargaHoraria);
     }
 
     static void deleteDisciplina() { // Deleta uma disciplina
-        System.out.println("Digite o código da disciplina: ");
+        System.out.printf("Digite o código da disciplina:\n-> ");
         String codigo = scanner.nextLine();
         Disciplina.Delete(codigo);
     }
@@ -189,6 +189,7 @@ public class Menu {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         scanner.nextLine();
         while (true) {
+            System.out.print("-> ");
             String userInput = scanner.nextLine();
             try {
                 data = dateFormat.parse(userInput);
