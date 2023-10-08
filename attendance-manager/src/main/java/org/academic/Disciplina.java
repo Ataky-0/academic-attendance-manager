@@ -58,9 +58,6 @@ public class Disciplina {
     public static void Delete(String codigo) { // deleta uma tupla Disciplina
         Frequencia.Delete(codigo, null);
 
-        String sqlRelatorioGeral = String.format("DELETE FROM RelatorioGeral WHERE codigo = '%s'", codigo);
-        Database.updateDB(sqlRelatorioGeral);
-
         String sqlDisciplina = String.format("DELETE FROM Disciplina WHERE codigo = '%s'", codigo);
         Database.updateDB(sqlDisciplina);
     }
