@@ -1,5 +1,6 @@
 package org.academic;
 
+// import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -11,7 +12,8 @@ public class Menu {
 
     static Scanner scanner = new Scanner(System.in);
 
-    public static void init() { // Inicia menu principal
+    
+    public static void init() throws SQLException { // Inicia menu principal
         while (true) {
             String[] opcoesMenu = {
                     "Disciplinas | Gerenciar Disciplinas",
@@ -20,7 +22,6 @@ public class Menu {
             };
             drawMenu("Menu", opcoesMenu);
             int escolha = getUserChoice(scanner, opcoesMenu.length);
-
             switch (escolha) {
                 case 1:
                     DisciplinaChooser();
@@ -61,11 +62,8 @@ public class Menu {
         }
     }
 
-    static void DisplayRelatorioGeral() { // Apenas para organizar, só chama um método do  RelatorioGeral
-        RelatorioGeral.printDisciplinasFrequencias();
-    }
-
-    static void DisciplinaChooser() { // Responsável pela escolha de disciplinas
+    // --> Disciplina
+    static void DisciplinaChooser() throws SQLException { // Responsável pela escolha de disciplinas
         System.out.printf("<-\t | Disciplinas | \t->\n");
         Boolean existeDisciplina = Disciplina.existeDisciplinas();
         if (existeDisciplina) {
@@ -88,6 +86,7 @@ public class Menu {
                     try {
                         System.out.printf("Você selecionou a disciplina %s.\n", disciplina.getString("nome"));
                         frequenciaManagement(disciplina.getString("codigo"));
+                        disciplina.close();
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -102,7 +101,25 @@ public class Menu {
         }
     }
 
-    static void frequenciaManagement(String codigoDisciplina) { // Menu para frequencia
+    static void createDisciplina() { // Cria uma disciplina
+        System.out.printf("Digite o nome da disciplina:\n-> ");
+        String nome = scanner.nextLine();
+        System.out.printf("Digite o código da disciplina:\n-> ");
+        String codigo = scanner.nextLine();
+        System.out.println("Verifique a carga horária de cada disciplina no seu sistema acadêmico.");
+        System.out.printf("Digite a carga horária da disciplina (horas):\n-> ");
+        int cargaHoraria = scanner.nextInt();
+        Disciplina.Create(nome, codigo, cargaHoraria);
+    }
+
+    static void deleteDisciplina() throws SQLException { // Deleta uma disciplina
+        System.out.printf("Digite o código da disciplina:\n-> ");
+        String codigo = scanner.nextLine();
+        Disciplina.Delete(codigo);
+    }
+
+    // --> Frequencia
+    static void frequenciaManagement(String codigoDisciplina) throws SQLException { // Menu para frequencia
         drawMenu("Frequências", null);
         Frequencia.printParcialFrequencias(codigoDisciplina);
         System.out.printf("(0 para cancelar, 1 para registrar, 2 para deletar, 3 para autoavaliação)\n-> ");
@@ -126,10 +143,10 @@ public class Menu {
         System.out.println("Digite uma data (yyyy/MM/dd):");
         Date data = getDate();
         // Verificar se não existe frequência com essa data
-        System.out.println("Você estava presente? (1 para Não, 2 para Sim)");
+        System.out.println("Você estava presente? (1 para Sim, 2 para Não)");
         int presencaAusencia = getUserChoice(scanner, 2);
         presencaAusencia = (presencaAusencia==1) ? 0: 1;
-        if (presencaAusencia == 0){
+        if (presencaAusencia == 1){
             Frequencia.Create(data, presencaAusencia, codigoDiscplina, 2);
         } else {
             System.out.printf("Quantas aulas assistiu? (1 ou 2)");
@@ -138,21 +155,21 @@ public class Menu {
         }
     }
 
-    static void deleteFrequencia(String codigoDisciplina) { // Deletar uma frequencia de uma disciplina
+    static void deleteFrequencia(String codigoDisciplina) throws SQLException { // Deletar uma frequencia de uma disciplina
         System.out.println("Digite a data da frequência (yyyy/MM/dd):");
         Date data = getDate();
         Frequencia.Delete(codigoDisciplina,data);
     }
 
-    static void avaliarFrequencia(String codigoDisciplina){ // Linkar Autoavaliacao à frequencia
+    static void avaliarFrequencia(String codigoDisciplina) throws SQLException{ // Linkar Autoavaliacao à frequencia
         System.out.println("Digite a data da frequência (yyyy/MM/dd):");
         Date data = getDate();
         int frequencia_id = Frequencia.getId(codigoDisciplina, data);
         if (Autoavaliacao.existByFrequencia(frequencia_id)){
             System.out.println("\""+Autoavaliacao.getComentario(frequencia_id)+"\"");
-            System.out.println("Deseja refazer este comentário? (1 para Não, 2 para Sim)");
+            System.out.println("Deseja refazer este comentário? (1 para Sim, 2 para Não)");
             int escolha = getUserChoice(scanner, 2);
-            if (escolha == 1)
+            if (escolha == 2)
                 return;
             else {
                 System.out.printf("Refaça o comentário deste dia:\n-> ");
@@ -166,22 +183,12 @@ public class Menu {
         Autoavaliacao.Create(frequencia_id,comentario);
         
     }
+    // --> Notas
 
-    static void createDisciplina() { // Cria uma disciplina
-        System.out.printf("Digite o nome da disciplina:\n-> ");
-        String nome = scanner.nextLine();
-        System.out.printf("Digite o código da disciplina:\n-> ");
-        String codigo = scanner.nextLine();
-        System.out.println("Verifique a carga horária de cada disciplina no seu sistema acadêmico.");
-        System.out.printf("Digite a carga horária da disciplina (horas):\n-> ");
-        int cargaHoraria = scanner.nextInt();
-        Disciplina.Create(nome, codigo, cargaHoraria);
-    }
 
-    static void deleteDisciplina() { // Deleta uma disciplina
-        System.out.printf("Digite o código da disciplina:\n-> ");
-        String codigo = scanner.nextLine();
-        Disciplina.Delete(codigo);
+    // --> RelatorioGeral
+    static void DisplayRelatorioGeral() { // Apenas para organizar, só chama um método do  RelatorioGeral
+        RelatorioGeral.printDisciplinasFrequencias();
     }
 
     private static Date getDate(){ // Obtém uma data com guard clauses

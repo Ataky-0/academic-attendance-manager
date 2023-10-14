@@ -4,3 +4,4 @@ attendance-manager/target/*
 .classpath
 .zhistory
 .vscode/
+*.lst

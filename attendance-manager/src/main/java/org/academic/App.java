@@ -1,4 +1,5 @@
 package org.academic;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +11,13 @@ public class App
 
     functionsMap.put("--help",Help::print); // Adiciona funções ligadas à strings (argumentos)
     functionsMap.put("--version",Help::printVersion);
-    functionsMap.put("menu",Menu::init);
+    functionsMap.put("menu",() -> {
+      try {
+        Menu.init();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    });
 
     if (args.length > 0 && functionsMap.containsKey(args[0])){ // Lida com os argumentos
       Runnable funcRunnable = functionsMap.get(args[0]);

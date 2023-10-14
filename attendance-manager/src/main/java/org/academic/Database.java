@@ -6,30 +6,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+// import javax.xml.crypto.Data;
+
 public class Database {
+    private static Connection connection;
     private static final String URL = "jdbc:mysql://sql10.freemysqlhosting.net:3306/sql10651874";
     private static final String USUARIO = "sql10651874";
     private static final String SENHA = "PLMAzVMLbS";
-
-    public static Connection conectar() { // conecta no banco de dados
-        Connection conexao = null;
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conexao = DriverManager.getConnection(URL, USUARIO, SENHA);
-        } catch (ClassNotFoundException | SQLException e) {
-            System.err.println("Não pôde se conectar à database.");
-            e.printStackTrace();
-        }
-
-        return conexao;
-    }
+    /*
+    Desta maneira, não é preciso um close para Conexao pois finalizar o programa já o fará.
+    SELECT COUNT(*) FROM information_schema.processlist WHERE DB IS NOT NULL;
+    Este sql retornará quantas conexões ATIVAS existem no banco de dados.
+    */
 
     public static ResultSet consultarResulta(String SQL) { // um atalho para realizar uma consulta e retornar seu ResultSet
-        Connection conexao = Database.conectar();
+        Connection Conexao = Database.getConnection();
         PreparedStatement consult;
         try {
-            consult = conexao.prepareStatement(SQL);
+            consult = Conexao.prepareStatement(SQL);
             ResultSet result = consult.executeQuery();
             return result;
         } catch (SQLException e) {
@@ -39,10 +33,10 @@ public class Database {
         return null;
     }
     public static PreparedStatement consultarPuro(String SQL) { // um atalho para realizar uma consulta e retornar um PreparedStatement
-        Connection conexao = Database.conectar();
+        Connection Conexao = Database.getConnection();
         PreparedStatement consult;
         try {
-            consult = conexao.prepareStatement(SQL);
+            consult = Conexao.prepareStatement(SQL);
             return consult;
         } catch (SQLException e) {
             System.err.println("SQL provavelmente incorreto.");
@@ -50,16 +44,27 @@ public class Database {
         }
         return null;
     }
-    public static int updateDB(String SQL){ // realiza sql do tipo create/update/delete
-        Connection conexao = Database.conectar();
+    public static void updateDB(String SQL){ // realiza sql do tipo create/update/delete
+        Connection Conexao = Database.getConnection();
         PreparedStatement statement;
         try {
-            statement = conexao.prepareStatement(SQL);
-            return statement.executeUpdate();
+            statement = Conexao.prepareStatement(SQL);
+            statement.executeUpdate();
         } catch (SQLException e) {
             System.err.println("SQL provavelmente incorreto.");
             e.printStackTrace();
         }
-        return 0;
+    }
+    public static Connection getConnection() {
+        if (connection == null) {
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                connection = DriverManager.getConnection(URL, USUARIO, SENHA);
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+                System.err.println("Conexão impedida com o banco de dados.");
+            }
+        }
+        return connection;
     }
 }
