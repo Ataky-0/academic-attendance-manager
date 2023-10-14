@@ -9,9 +9,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Frequencia {
-    public static void printParcialFrequencias(String codigoDisciplina) throws SQLException { // imprime quase todas informações de todas tuplas
+    public static void printParcialFrequencias(String codigoDisciplina) throws SQLException { // imprime quase todas
+                                                                                              // informações de todas
+                                                                                              // tuplas
         ResultSet result = Database.consultarResulta(String.format(
                 "SELECT data,presencaAusencia,faltas FROM Frequencia WHERE codigo = '%s'", codigoDisciplina));
+        if (!result.isBeforeFirst())
+            System.out.printf("\nNão há frequências para esta Disciplina ainda.\n");
         while (result.next()) {
             Date data = result.getDate("data");
             Boolean presencaAusencia = result.getBoolean("presencaAusencia");
@@ -19,7 +23,7 @@ public class Frequencia {
             if (presencaAusencia) {
                 System.out.printf("\n%tF Presente", data);
                 if (faltas > 0)
-                    System.out.printf(" | %d Faltas\n", faltas);
+                    System.out.printf(" | %d Falta(s)\n", faltas);
                 else
                     System.out.println();
             } else {
@@ -30,8 +34,8 @@ public class Frequencia {
     }
 
     public static void Create(Date data, int presencaAusencia, String codigo, int faltas) { // cria
-                                                                                                                // tupla
-                                                                                                                // frequencia
+                                                                                            // tupla
+                                                                                            // frequencia
         String sql = String.format(
                 "INSERT INTO Frequencia (data,presencaAusencia,codigo,faltas) VALUES ('%tF','%d','%s','%d')", data,
                 presencaAusencia, codigo, faltas);
@@ -39,7 +43,7 @@ public class Frequencia {
     }
 
     public static void Delete(String codigo, Date data) throws SQLException { // deleta uma tupla
-                                                                                                  // frequencia
+                                                                              // frequencia
         String sqlFrequencia;
         if (data != null) {
             Autoavaliacao.Delete(Frequencia.getId(codigo, data));
@@ -58,7 +62,7 @@ public class Frequencia {
     }
 
     public static int getFaltas(String codigo) throws SQLException { // obtém todas as faltas de uma
-                                                                                         // disciplina
+                                                                     // disciplina
         ResultSet result = Database
                 .consultarResulta(String.format("SELECT faltas FROM Frequencia WHERE codigo = '%s'", codigo));
         int returnFaltas = 0;
@@ -70,8 +74,8 @@ public class Frequencia {
     }
 
     public static int getId(String codigo, Date data) throws SQLException { // obtém frequencia_id
-                                                                                                // de uma tupla
-                                                                                                // frequencia
+                                                                            // de uma tupla
+                                                                            // frequencia
         int id = 0;
         ResultSet result = Database.consultarResulta(
                 String.format("SELECT codigo,frequencia_id FROM Frequencia WHERE data = '%tF'", data));
@@ -82,8 +86,8 @@ public class Frequencia {
     }
 
     public static Boolean doesExist(int frequencia_id) throws SQLException { // retorna caso tupla
-                                                                                                 // frequencia exista ou
-                                                                                                 // não
+                                                                             // frequencia exista ou
+                                                                             // não
         Boolean doesExist = false;
         ResultSet result = Database.consultarResulta(
                 String.format("SELECT * FROM Frequencia WHERE frequencia_id = '%s'", frequencia_id));

@@ -51,14 +51,15 @@ public class Menu {
     }
 
     private static int getUserChoice(Scanner scanner, int numOpcoes) { // Obtém escolha do usuário com guard clauses
-        System.out.print("-> ");
-        int escolha = scanner.nextInt();
-        scanner.nextLine();
-
-        if (escolha >= 1 && escolha <= numOpcoes) {
-            return escolha;
-        } else {
-            return -1;
+        while (true){
+            System.out.print("-> ");
+            int escolha = scanner.nextInt();
+            scanner.nextLine();
+            if (escolha >= 1 && escolha <= numOpcoes) {
+                return escolha;
+            } else {
+                System.out.println("Valor inválido.");
+            }
         }
     }
 
@@ -70,7 +71,7 @@ public class Menu {
             Disciplina.printParcialDisciplinas();
             System.out.println("(0 para cancelar, 1 para criar, 2 para deletar)");
             System.out.printf("Ou escolha uma disciplina através do seu código:\n-> ");
-            String escolha = scanner.nextLine(); // Seria interessante adicionar .guard clauses
+            String escolha = scanner.nextLine(); // Seria interessante adicionar guard clauses
             if (escolha.equals("0")) {
                 return;
             } else if (escolha.equals("1")) {
@@ -85,7 +86,7 @@ public class Menu {
                 if (disciplina.next()) {
                     try {
                         System.out.printf("Você selecionou a disciplina %s.\n", disciplina.getString("nome"));
-                        frequenciaManagement(disciplina.getString("codigo"));
+                        disciplinaManagement(disciplina.getString("codigo"));
                         disciplina.close();
                     } catch (SQLException e) {
                         e.printStackTrace();
@@ -118,23 +119,45 @@ public class Menu {
         Disciplina.Delete(codigo);
     }
 
+    static void disciplinaManagement(String codigo) throws SQLException{ // Sub menu de DisciplinaChooser
+        String[] opcoesMenu = {
+            "Frequencia | Registrar faltas",
+            "Notas | Gerenciar notas",
+            "Voltar"
+        };
+        drawMenu("Disciplina", opcoesMenu);
+        int escolha = getUserChoice(scanner,3);
+        switch (escolha) {
+            case 1:
+                frequenciaManagement(codigo);
+                break;
+            case 2:
+                notasManagement(codigo);
+                break;
+            case 3:
+                DisciplinaChooser();
+                break;
+        }
+    }
+
     // --> Frequencia
     static void frequenciaManagement(String codigoDisciplina) throws SQLException { // Menu para frequencia
         drawMenu("Frequências", null);
         Frequencia.printParcialFrequencias(codigoDisciplina);
-        System.out.printf("(0 para cancelar, 1 para registrar, 2 para deletar, 3 para autoavaliação)\n-> ");
+        System.out.printf("\n(0 para cancelar, 1 para registrar, 2 para deletar, 3 para autoavaliação)\n-> ");
         int escolha = scanner.nextInt();
         switch (escolha) {
-            case 3:
-                avaliarFrequencia(codigoDisciplina);
+            case 1:
+                registerFrequencia(codigoDisciplina);
                 break;
             case 2:
                 deleteFrequencia(codigoDisciplina);
                 break;
-            case 1:
-                registerFrequencia(codigoDisciplina);
+            case 3:
+                avaliarFrequencia(codigoDisciplina);
                 break;
             case 0:
+                disciplinaManagement(codigoDisciplina);
                 break;
         }
     }
@@ -145,8 +168,8 @@ public class Menu {
         // Verificar se não existe frequência com essa data
         System.out.println("Você estava presente? (1 para Sim, 2 para Não)");
         int presencaAusencia = getUserChoice(scanner, 2);
-        presencaAusencia = (presencaAusencia==1) ? 0: 1;
-        if (presencaAusencia == 1){
+        presencaAusencia = (presencaAusencia==2) ? 0: 1;
+        if (presencaAusencia == 0){
             Frequencia.Create(data, presencaAusencia, codigoDiscplina, 2);
         } else {
             System.out.printf("Quantas aulas assistiu? (1 ou 2)");
@@ -184,7 +207,44 @@ public class Menu {
         
     }
     // --> Notas
+    static void notasManagement(String codigo) throws SQLException{
+        drawMenu("Notas", null);
+        Notas.printTotal(codigo);
+        System.out.printf("\n(0 para cancelar, 1 para editar)\n-> ");
+        int escolha = scanner.nextInt();
+        switch (escolha) {
+            case 1:
+                editarNotas(codigo);
+                break;
+            case 0:
+                disciplinaManagement(codigo);
+                break;
+        }
+    }
 
+    static void editarNotas(String codigo) throws SQLException{
+        float MP = Notas.getMediaParcial(codigo);
+        int unidades = (MP>=3.5f && MP <7f) ? 4: 3;
+        System.out.printf("Qual nota você deseja editar? (Escolha entre 1 e %d):\n",unidades);
+        int notaPos = getUserChoice(scanner, unidades);
+        System.out.println("Agora dite a nova nota para esta unidade: ");
+        float nota = getUserFloat(scanner, 0.0f, 10.0f);
+        Notas.Update(codigo, notaPos, nota);
+        notasManagement(codigo);
+    }
+
+    static float getUserFloat(Scanner scanner, float min, float max){
+        String input = "0f";
+        while (true){
+            System.out.printf("-> ");
+            input = scanner.next();
+            input.replace(",", ".");
+            if (Float.parseFloat(input) < min || Float.parseFloat(input) > max)
+                System.out.printf("Digite um valor entre %.2f e %.2f",min,max);
+            else break;
+        }
+        return Float.parseFloat(input);
+    }
 
     // --> RelatorioGeral
     static void DisplayRelatorioGeral() { // Apenas para organizar, só chama um método do  RelatorioGeral
