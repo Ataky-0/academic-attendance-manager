@@ -10,9 +10,9 @@ import java.sql.SQLException;
 
 public class Database {
     private static Connection connection;
-    private static final String URL = "jdbc:mysql://sql10.freemysqlhosting.net:3306/sql10651874";
-    private static final String USUARIO = "sql10651874";
-    private static final String SENHA = "PLMAzVMLbS";
+    private static final String URL = "jdbc:mysql://db4free.net:3306/attendance_manag";
+    private static final String USUARIO = "opera_admin";
+    private static final String SENHA = "Opera@32";
     /*
     Desta maneira, não é preciso um close para Conexao pois finalizar o programa já o fará.
     SELECT COUNT(*) FROM information_schema.processlist WHERE DB IS NOT NULL;

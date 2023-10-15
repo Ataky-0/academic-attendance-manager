@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS academic_attendance;
+-- CREATE DATABASE IF NOT EXISTS academic_attendance;
 
-USE academic_attendance;
+-- USE academic_attendance;
 
 CREATE TABLE IF NOT EXISTS Disciplina (
     codigo VARCHAR(255) PRIMARY KEY,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS Frequencia (
     frequencia_id SERIAL PRIMARY KEY,
     data DATE,
     presencaAusencia BOOLEAN,
-    int faltas,
+    faltas int,
     codigo VARCHAR(255),
     FOREIGN KEY (codigo) REFERENCES Disciplina (codigo)
 );

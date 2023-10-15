@@ -14,6 +14,8 @@ public class Menu {
 
     
     public static void init() throws SQLException { // Inicia menu principal
+        System.out.printf("\nSe conectando ao banco de dados..\n\n");
+        Database.getConnection();
         while (true) {
             String[] opcoesMenu = {
                     "Disciplinas | Gerenciar Disciplinas",
@@ -102,7 +104,7 @@ public class Menu {
         }
     }
 
-    static void createDisciplina() { // Cria uma disciplina
+    static void createDisciplina() throws SQLException { // Cria uma disciplina
         System.out.printf("Digite o nome da disciplina:\n-> ");
         String nome = scanner.nextLine();
         System.out.printf("Digite o código da disciplina:\n-> ");
@@ -110,13 +112,16 @@ public class Menu {
         System.out.println("Verifique a carga horária de cada disciplina no seu sistema acadêmico.");
         System.out.printf("Digite a carga horária da disciplina (horas):\n-> ");
         int cargaHoraria = scanner.nextInt();
+        scanner.nextLine();
         Disciplina.Create(nome, codigo, cargaHoraria);
+        DisciplinaChooser();
     }
 
     static void deleteDisciplina() throws SQLException { // Deleta uma disciplina
         System.out.printf("Digite o código da disciplina:\n-> ");
         String codigo = scanner.nextLine();
         Disciplina.Delete(codigo);
+        DisciplinaChooser();
     }
 
     static void disciplinaManagement(String codigo) throws SQLException{ // Sub menu de DisciplinaChooser
@@ -162,7 +167,7 @@ public class Menu {
         }
     }
 
-    static void registerFrequencia(String codigoDiscplina){ // Registrar uma frequencia em uma disciplina
+    static void registerFrequencia(String codigoDisciplina) throws SQLException{ // Registrar uma frequencia em uma disciplina
         System.out.println("Digite uma data (yyyy/MM/dd):");
         Date data = getDate();
         // Verificar se não existe frequência com essa data
@@ -170,18 +175,20 @@ public class Menu {
         int presencaAusencia = getUserChoice(scanner, 2);
         presencaAusencia = (presencaAusencia==2) ? 0: 1;
         if (presencaAusencia == 0){
-            Frequencia.Create(data, presencaAusencia, codigoDiscplina, 2);
+            Frequencia.Create(data, presencaAusencia, codigoDisciplina, 2);
         } else {
             System.out.printf("Quantas aulas assistiu? (1 ou 2)");
             int faltas = 2-getUserChoice(scanner, 2);
-            Frequencia.Create(data, presencaAusencia, codigoDiscplina, faltas);
+            Frequencia.Create(data, presencaAusencia, codigoDisciplina, faltas);
         }
+        frequenciaManagement(codigoDisciplina);
     }
 
     static void deleteFrequencia(String codigoDisciplina) throws SQLException { // Deletar uma frequencia de uma disciplina
         System.out.println("Digite a data da frequência (yyyy/MM/dd):");
         Date data = getDate();
         Frequencia.Delete(codigoDisciplina,data);
+        frequenciaManagement(codigoDisciplina);
     }
 
     static void avaliarFrequencia(String codigoDisciplina) throws SQLException{ // Linkar Autoavaliacao à frequencia
@@ -192,19 +199,18 @@ public class Menu {
             System.out.println("\""+Autoavaliacao.getComentario(frequencia_id)+"\"");
             System.out.println("Deseja refazer este comentário? (1 para Sim, 2 para Não)");
             int escolha = getUserChoice(scanner, 2);
-            if (escolha == 2)
-                return;
-            else {
+            if (escolha == 1){
                 System.out.printf("Refaça o comentário deste dia:\n-> ");
                 String comentario = scanner.nextLine();
                 Autoavaliacao.Update(frequencia_id, comentario);
-                return;
             }
+            frequenciaManagement(codigoDisciplina);
+            return;
         }
         System.out.printf("Digite um comentário para este dia:\n-> ");
         String comentario = scanner.nextLine();
         Autoavaliacao.Create(frequencia_id,comentario);
-        
+        frequenciaManagement(codigoDisciplina);
     }
     // --> Notas
     static void notasManagement(String codigo) throws SQLException{
@@ -224,7 +230,7 @@ public class Menu {
 
     static void editarNotas(String codigo) throws SQLException{
         float MP = Notas.getMediaParcial(codigo);
-        int unidades = (MP>=3.5f && MP <7f) ? 4: 3;
+        int unidades = (MP>=3.5f && MP <7f && !Notas.anyZero(codigo)) ? 4: 3;
         System.out.printf("Qual nota você deseja editar? (Escolha entre 1 e %d):\n",unidades);
         int notaPos = getUserChoice(scanner, unidades);
         System.out.println("Agora dite a nova nota para esta unidade: ");

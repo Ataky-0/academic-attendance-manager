@@ -13,9 +13,12 @@ public class Notas {
                 System.out.printf("\nUnidade 0%d: %.1f\n",i,result.getFloat("nota0"+i));
             if (MP!=0f){ // Servirá para saber se precisa ou não da quarta prova
                 System.out.printf("\nMédia Parcial: %.1f\n",MP);
-                if (MP>=3.5f && MP<7f){ // Questiona se quarta prova é necessária?
+                if (MP>=3.5f && MP<7f && !anyZero(codigo)){ // Questiona se quarta prova é necessária?
                     float quartaProva = result.getFloat("nota04");
-                    System.out.printf("\nQuarta prova: %.1f\n",quartaProva);
+                    System.out.printf("\nQuarta prova: %.1f",quartaProva);
+                    if (quartaProva==0){
+                        System.out.printf(" (Necessário %.1f)\n",(10*5-MP*6)/4);
+                    } else System.out.printf("\n");
                     if (quartaProva!=0f){
                         float MF = getMediaFinal(codigo, quartaProva);
                         System.out.printf("\nMédia Final: %.1f\n",MF);
