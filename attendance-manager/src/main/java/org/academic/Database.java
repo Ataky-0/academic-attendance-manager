@@ -6,8 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-// import javax.xml.crypto.Data;
-
 public class Database {
     private static Connection connection;
     private static final String URL = "jdbc:mysql://db4free.net:3306/attendance_manag";

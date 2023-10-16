@@ -12,14 +12,13 @@ CREATE TABLE IF NOT EXISTS Frequencia (
     frequencia_id SERIAL PRIMARY KEY,
     data DATE,
     presencaAusencia BOOLEAN,
-    faltas int,
+    faltas INT,
     codigo VARCHAR(255),
     FOREIGN KEY (codigo) REFERENCES Disciplina (codigo)
 );
 
 CREATE TABLE IF NOT EXISTS Autoavaliacao (
     autoavaliacao_id SERIAL PRIMARY KEY,
-    autoNota FLOAT,
     comentario TEXT,
     frequencia_id BIGINT UNSIGNED,
     FOREIGN KEY (frequencia_id) REFERENCES Frequencia (frequencia_id)

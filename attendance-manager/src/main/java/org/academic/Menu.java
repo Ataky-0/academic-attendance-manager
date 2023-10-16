@@ -244,7 +244,7 @@ public class Menu {
         while (true){
             System.out.printf("-> ");
             input = scanner.next();
-            input.replace(",", ".");
+            input = input.replace(",", ".");
             if (Float.parseFloat(input) < min || Float.parseFloat(input) > max)
                 System.out.printf("Digite um valor entre %.2f e %.2f",min,max);
             else break;
