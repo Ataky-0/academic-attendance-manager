@@ -25,7 +25,7 @@ O projeto foi feito com o builder Maven, portanto, certifique-se que o tenha ins
 cd attendance-manager/
 mvn clean install
 # para executar:
-java -jar target/attendance-manager.jar
+java -jar target/attendance-manager.jar menu
 ```
 
 O Maven deve resolver as dependências do projeto e torná-lo executável automaticamente.

@@ -78,9 +78,10 @@ public class Frequencia {
                                                                             // frequencia
         int id = 0;
         ResultSet result = Database.consultarResulta(
-                String.format("SELECT codigo,frequencia_id FROM Frequencia WHERE data = '%tF'", data));
-        result.next();
-        id = result.getInt("frequencia_id");
+                String.format("SELECT codigo,frequencia_id FROM Frequencia WHERE codigo = '%s' AND data = '%tF'", codigo, data));
+        if(result.next()){
+            id = result.getInt("frequencia_id");
+        } else id = -1;
         result.close();
         return id;
     }

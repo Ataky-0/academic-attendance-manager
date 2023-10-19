@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS Disciplina (
 CREATE TABLE IF NOT EXISTS Frequencia (
     frequencia_id SERIAL PRIMARY KEY,
     data DATE,
-    presencaAusencia BOOLEAN,
+    presencaAusencia BOOLEAN, -- Em breve será removido (após resolução do código) dado o desperdício de recurso.
     faltas INT,
     codigo VARCHAR(255),
     FOREIGN KEY (codigo) REFERENCES Disciplina (codigo)
