@@ -55,13 +55,16 @@ public class Menu {
     public static int getUserChoice(Scanner scanner,int minOpcoes, int numOpcoes) { // Obtém escolha do usuário com guard clauses
         while (true){
             System.out.print("-> ");
-            int escolha = scanner.nextInt();
-            scanner.nextLine();
-            if (escolha >= minOpcoes && escolha <= numOpcoes) {
-                return escolha;
-            } else {
-                System.out.println("Valor inválido.");
-            }
+            String escolhaString = scanner.nextLine();
+            // int escolha = scanner.nextInt();
+            // scanner.nextLine();
+            try {
+                int escolha = Integer.parseInt(escolhaString);
+                if (escolha >= minOpcoes && escolha <= numOpcoes)
+                    return escolha;
+            } catch (NumberFormatException e){}
+            
+            System.out.println("Valor inválido.");
         }
     }
 
@@ -263,8 +266,8 @@ public class Menu {
     static void notasManagement(String codigo) throws SQLException{
         drawMenu("Notas", null);
         Notas.printTotal(codigo);
-        System.out.printf("\n(0 para cancelar, 1 para editar)\n-> ");
-        int escolha = scanner.nextInt();
+        System.out.printf("\n(0 para cancelar, 1 para editar)\n");
+        int escolha = getUserChoice(scanner, 0, 1);
         switch (escolha) {
             case 1:
                 editarNotas(codigo);
@@ -290,11 +293,13 @@ public class Menu {
         String input = "0f";
         while (true){
             System.out.printf("-> ");
-            input = scanner.next();
+            input = scanner.nextLine();
             input = input.replace(",", ".");
-            if (Float.parseFloat(input) < min || Float.parseFloat(input) > max)
-                System.out.printf("Digite um valor entre %.2f e %.2f\n",min,max);
-            else break;
+            try {
+                if (Float.parseFloat(input) >= min || Float.parseFloat(input) <= max)
+                    break;
+            } catch (NumberFormatException e){}
+            System.out.printf("Digite um valor entre %.1f e %.1f\n",min,max);
         }
         return Float.parseFloat(input);
     }
