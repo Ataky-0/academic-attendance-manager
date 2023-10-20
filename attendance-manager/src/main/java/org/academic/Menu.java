@@ -52,7 +52,7 @@ public class Menu {
         }
     }
 
-    private static int getUserChoice(Scanner scanner,int minOpcoes, int numOpcoes) { // Obtém escolha do usuário com guard clauses
+    public static int getUserChoice(Scanner scanner,int minOpcoes, int numOpcoes) { // Obtém escolha do usuário com guard clauses
         while (true){
             System.out.print("-> ");
             int escolha = scanner.nextInt();
@@ -175,7 +175,7 @@ public class Menu {
 
     static void registerFrequencia(String codigoDisciplina) throws SQLException{ // Registrar uma frequencia em uma disciplina
         System.out.println("Digite uma data (yyyy/MM/dd):");
-        Date data = getDate();
+        Date data = getDate(scanner);
         // Verificar se não existe frequência com essa data
         if (Frequencia.getId(codigoDisciplina, data)!=-1){
             System.out.printf("\nFrequência já existe.\n");
@@ -196,7 +196,7 @@ public class Menu {
 
     static void deleteFrequencia(String codigoDisciplina) throws SQLException { // Deletar uma frequencia de uma disciplina
         System.out.println("Digite a data da frequência (yyyy/MM/dd):");
-        Date data = getDate();
+        Date data = getDate(scanner);
         if (Frequencia.getId(codigoDisciplina, data)==-1)
             System.out.printf("\nFrequência não existe.\n");
         else
@@ -206,7 +206,7 @@ public class Menu {
 
     static void avaliarFrequencia(String codigoDisciplina) throws SQLException{ // Linkar Autoavaliacao à frequencia
         System.out.println("Digite a data da frequência (yyyy/MM/dd):");
-        Date data = getDate();
+        Date data = getDate(scanner);
         int frequencia_id = Frequencia.getId(codigoDisciplina, data);
         if (frequencia_id == -1)
             System.out.printf("\nFrequência não existe. Crie-a primeiro!\n");
@@ -230,10 +230,9 @@ public class Menu {
         frequenciaManagement(codigoDisciplina);
     }
 
-    private static Date getDate(){ // Obtém uma data com guard clauses
+    public static Date getDate(Scanner scanner){ // Obtém uma data com guard clauses
         Date data;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        // scanner.nextLine();
         while (true) {
             System.out.print("-> ");
             String userInput = scanner.nextLine();

@@ -18,17 +18,23 @@ O objetivo deste projeto em Java é criar um sistema gerenciador acadêmico foca
 O Sistema será a princípio apresentado por meio de CLI/TUI e posteriormente adaptado para interface usando dos próprios recursos do Java.
 
 ## Como compilar e executar
-O projeto foi feito com o builder Maven, portanto, certifique-se que o tenha instalado em seu sistema. Se desloque à pasta principal do projeto _attendance-manager/_ onde o arquivo *pom.xml* estiver e compile o projeto de forma limpa.
+O projeto foi feito com o builder Maven, portanto, certifique-se que o tenha instalado em seu sistema. **Se desloque à pasta principal do projeto _"attendance-manager/"_ onde o arquivo _"pom.xml"_ estiver** e compile o projeto de forma limpa.
 
 ```shell
 # para compilar:
 cd attendance-manager/
 mvn clean install
+# para apenas rodar testes:
+mvn test -e
 # para executar:
+java -jar target/attendance-manager.jar
+# para abrir menu (TUI):
 java -jar target/attendance-manager.jar menu
 ```
 
 O Maven deve resolver as dependências do projeto e torná-lo executável automaticamente.
+
+_Obs: para usuários Windows, evitem usar acentuação gráfica por enquanto, existem problemas (possivelmente) de encodificação a serem resolvidos._
 
 ### Banco de dados
 

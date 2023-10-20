@@ -8,7 +8,7 @@ public class App
   public static void main( String[] args )
   {
     System.setProperty("file.encoding", "UTF-8");
-    Map<String,Runnable> functionsMap = new HashMap<>(); // Cria um hashmap para simular um metatable em Lua :)
+    Map<String,Runnable> functionsMap = new HashMap<>(); // Cria um hashmap para simular um constructor* em Lua :)
 
     functionsMap.put("--help",Help::print); // Adiciona funções ligadas à strings (argumentos)
     functionsMap.put("--version",Help::printVersion);
