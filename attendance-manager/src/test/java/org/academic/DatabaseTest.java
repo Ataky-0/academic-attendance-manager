@@ -95,7 +95,7 @@ public class DatabaseTest {
         Autoavaliacao.Create(frequencia_id, "TesteTeste");
 
         // verificar se a autoavalicao corresponde com os valores inseridos
-        String sql = String.format("SELECT comentario FROM Autoavaliacao WHERE frequencia_id = '%s'", frequencia_id);
+        String sql = String.format("SELECT comentario, frequencia_id FROM Autoavaliacao WHERE frequencia_id = '%d'", frequencia_id);
         ResultSet result = Database.consultarResulta(sql);
         try {
             if (result.next()){
