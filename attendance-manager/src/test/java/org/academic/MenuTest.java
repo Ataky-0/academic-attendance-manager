@@ -5,8 +5,8 @@ import static org.junit.gen5.api.Assertions.*;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Scanner;
-import java.util.Date;
 import java.text.ParseException;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 import org.junit.gen5.api.Test;
 
