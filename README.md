@@ -20,6 +20,8 @@ O Sistema será a princípio apresentado por meio de CLI/TUI e posteriormente ad
 ## Como compilar e executar
 O projeto foi feito com o builder Maven, portanto, certifique-se que o tenha instalado em seu sistema. **Se desloque à pasta principal do projeto _"attendance-manager/"_ onde o arquivo _"pom.xml"_ estiver** e compile o projeto de forma limpa.
 
+O código-fonte está em _attendance-manager/src/main/java/org/academic_.
+
 ```shell
 # para compilar:
 cd attendance-manager/
