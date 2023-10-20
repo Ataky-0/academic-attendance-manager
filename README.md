@@ -21,11 +21,12 @@ O Sistema será a princípio apresentado por meio de CLI/TUI e posteriormente ad
 O projeto foi feito com o builder Maven, portanto, certifique-se que o tenha instalado em seu sistema. **Se desloque à pasta principal do projeto _"attendance-manager/"_ onde o arquivo _"pom.xml"_ estiver** e compile o projeto de forma limpa.
 
 O código-fonte está em _attendance-manager/src/main/java/org/academic_.
+O código de testes está em _attendance-manager/src/test/java/org/academic_.
 
 ```shell
 # para compilar:
 cd attendance-manager/
-mvn clean install
+mvn clean install # ou "mvn clean install -DskipTests" para compilar sem testes
 # para apenas rodar testes:
 mvn test -e
 # para executar:

@@ -106,8 +106,10 @@ public class Menu {
     }
 
     static void createDisciplina() throws SQLException { // Cria uma disciplina
-        System.out.printf("Digite o nome da disciplina:\n-> ");
+        System.out.printf("Digite o nome da disciplina: (-1 para voltar ao menu principal)\n-> ");
         String nome = scanner.nextLine();
+        if (nome.equals("-1"))
+            return;
         System.out.printf("Digite o código da disciplina:\n-> ");
         String codigo = scanner.nextLine();
         System.out.println("Verifique a carga horária de cada disciplina no seu sistema acadêmico.");
@@ -189,7 +191,7 @@ public class Menu {
             if (presencaAusencia == 0){
                 Frequencia.Create(data, presencaAusencia, codigoDisciplina, 2);
             } else {
-                System.out.printf("Quantas aulas assistiu? (1 ou 2)");
+                System.out.printf("Quantas aulas assistiu? (1 ou 2)\n");
                 int faltas = 2-getUserChoice(scanner, 1, 2);
                 Frequencia.Create(data, presencaAusencia, codigoDisciplina, faltas);
             }
@@ -296,7 +298,7 @@ public class Menu {
             input = scanner.nextLine();
             input = input.replace(",", ".");
             try {
-                if (Float.parseFloat(input) >= min || Float.parseFloat(input) <= max)
+                if (Float.parseFloat(input) >= min && Float.parseFloat(input) <= max)
                     break;
             } catch (NumberFormatException e){}
             System.out.printf("Digite um valor entre %.1f e %.1f\n",min,max);

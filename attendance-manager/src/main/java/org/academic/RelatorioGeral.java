@@ -8,6 +8,8 @@ public class RelatorioGeral {
     public static void printDisciplinasFrequencias() { // imprime parcial de todas as disciplinas
             ResultSet result = Database.consultarResulta("SELECT codigo,nome FROM Disciplina");
             try {
+                if (!result.isBeforeFirst())
+                    System.out.printf("\nNão há Disciplinas registradas ainda.\n\n");
                 while (result.next()) {
                     String nome = result.getString("nome");
                     String codigo = result.getString("codigo");
